@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استودیو حرکت هوش مصنوعی | تولید ویدیوهای تجاری با AI</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="استودیو حرکت هوش مصنوعی، ویدیوهای تبلیغاتی سینمایی را با قدرت هوش مصنوعی در کمتر از ۲۴ ساعت تولید می‌کند. ایده‌های خود را به ویدیوهای تجاری خیره‌کننده تبدیل کنید.">
+    
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "AI Motion Studio",
+      "url": "https://aimotionstudio.com",
+      "description": "تولید ویدیوهای تجاری با هوش مصنوعی و راهکارهای خلاقانه بازاریابی.",
+      "sameAs": [
+        "https://twitter.com/aimotionstudio",
+        "https://linkedin.com/company/aimotionstudio"
+      ]
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts (Vazirmatn for Persian) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Three.js for 3D Hero Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #7C3AED;
+            --secondary: #A855F7;
+            --tertiary: #C084FC;
+            --bg-dark: #0F172A;
+            --bg-darker: #111827;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--white);
+            font-family: 'Vazirmatn', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--white);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--tertiary);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+        }
+        .cursor-outline.hovered {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(168, 85, 247, 0.1);
+            border-color: transparent;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Gradient Border */
+        .gradient-border {
+            position: relative;
+            background: rgba(17, 24, 39, 0.8);
+            border-radius: 20px;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.8), rgba(168, 85, 247, 0.2), transparent);
+            border-radius: inherit;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* Glow Effects */
+        .glow-purple {
+            box-shadow: 0 0 40px rgba(124, 58, 237, 0.3), 0 0 80px rgba(124, 58, 237, 0.1);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(192, 132, 252, 0.6);
+        }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Marquee */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-track {
+            display: inline-block;
+            animation: marquee 40s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* RTL handled by content duplication */
+        }
+
+        /* Button Ripple */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-primary:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Accordion */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        
+        /* Hero 3D Canvas Container */
+        #hero-3d-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Mockup styling */
+        .mockup-laptop {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            perspective: 1000px;
+            z-index: 10;
+        }
+        .laptop-screen {
+            background: #111827;
+            border-radius: 12px 12px 4px 4px;
+            border: 2px solid #333;
+            padding: 10px;
+            box-shadow: 0 -5px 30px rgba(124, 58, 237, 0.2);
+        }
+        .laptop-base {
+            width: 110%;
+            margin-right: -5%; /* RTL adjustment */
+            height: 10px;
+            background: #222;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* Hide cursor on mobile */
+        @media (max-width: 768px) {
+            body { cursor: auto; }
+            .cursor-dot, .cursor-outline { display: none; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Navbar -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2 text-xl font-bold tracking-tight">
+                <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7C3AED] to-[#A855F7] flex items-center justify-center">
+                    <i data-lucide="play-circle" class="w-5 h-5 text-white"></i>
+                </span>
+                استودیو حرکت هوش مصنوعی
+            </a>
+            <ul class="hidden md:flex items-center gap-8 text-sm text-slate-300">
+                <li><a href="#services" class="hover:text-white transition">خدمات</a></li>
+                <li><a href="#portfolio" class="hover:text-white transition">نمونه کارها</a></li>
+                <li><a href="#pricing" class="hover:text-white transition">قیمت‌گذاری</a></li>
+                <li><a href="#contact" class="hover:text-white transition">تماس</a></li>
+            </ul>
+            <a href="#contact" class="btn-primary hidden md:inline-block px-5 py-2.5 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] rounded-xl text-sm font-semibold">مشاوره رایگان</a>
+            <button class="md:hidden text-white" id="menu-btn"><i data-lucide="menu"></i></button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex flex-col justify-center items-center pt-24 pb-12 overflow-hidden">
+        <div id="hero-3d-bg"></div> <!-- 3D Animation Container -->
+        
+        <!-- Gradient Orbs -->
+        <div class="absolute top-1/4 -right-20 w-96 h-96 bg-[#7C3AED] rounded-full filter blur-[120px] opacity-30 float-anim z-0"></div>
+        <div class="absolute bottom-1/4 -left-20 w-96 h-96 bg-[#A855F7] rounded-full filter blur-[120px] opacity-20 float-anim z-0" style="animation-delay: 2s;"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full glass border border-purple-500/30 text-xs font-medium text-purple-200 tracking-wide">
+                <span class="w-2 h-2 bg-[#C084FC] rounded-full animate-pulse"></span>
+                نسل جدید تولید ویدیو با هوش مصنوعی
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 tracking-tighter">
+                ایده‌های خود را به <br class="hidden md:block">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#C084FC] via-[#A855F7] to-[#7C3AED] text-glow">ویدیوهای تجاری خیره‌کننده AI</span> تبدیل کنید
+            </h1>
+            
+            <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-10 font-light">
+                تولید ویدیوهای تبلیغاتی سینمایی با قدرت هوش مصنوعی در کمتر از ۲۴ ساعت.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-20">
+                <a href="#contact" class="btn-primary px-8 py-4 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] rounded-2xl text-base font-semibold flex items-center justify-center gap-2 glow-purple">
+                    درخواست مشاوره رایگان <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </a>
+                <a href="#portfolio" class="px-8 py-4 glass rounded-2xl text-base font-semibold flex items-center justify-center gap-2 hover:bg-white/10 transition">
+                    مشاهده نمونه کارها <i data-lucide="play" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Hero Mockup -->
+            <div class="relative max-w-4xl mx-auto fade-up">
+                <div class="mockup-laptop float-anim" style="animation-duration: 8s;">
+                    <div class="laptop-screen">
+                        <div class="aspect-video bg-gradient-to-br from-slate-900 to-slate-950 rounded-md overflow-hidden relative border border-white/5">
+                            <!-- Fake Video Player UI -->
+                            <div class="absolute top-0 right-0 left-0 flex items-center gap-1.5 p-3 bg-slate-900/50 backdrop-blur-sm">
+                                <div class="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
+                                <div class="w-2.5 h-2.5 bg-yellow-500 rounded-full"></div>
+                                <div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                            </div>
+                            <!-- Video Content -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e0c31?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover opacity-80" alt="AI Commercial Video">
+                                <div class="absolute w-16 h-16 rounded-full glass flex items-center justify-center border border-white/30 backdrop-blur-md">
+                                    <i data-lucide="play" class="w-6 h-6 text-white mr-1"></i>
+                                </div>
+                            </div>
+                            <!-- Timeline -->
+                            <div class="absolute bottom-0 right-0 left-0 p-3 bg-slate-900/70 backdrop-blur-md">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs text-slate-400">0:00</span>
+                                    <div class="flex-1 h-1 bg-slate-700 rounded-full overflow-hidden">
+                                        <div class="h-full w-1/3 bg-gradient-to-r from-[#7C3AED] to-[#A855F7]"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-400">0:24</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="laptop-base"></div>
+                </div>
+                
+                <!-- Floating Phone Mockup -->
+                <div class="hidden lg:block absolute -bottom-10 -left-10 w-48 float-anim" style="animation-delay: 1s;">
+                    <div class="glass p-2 rounded-[2rem] border-2 border-purple-500/30 shadow-2xl">
+                        <div class="aspect-[9/19] rounded-[1.5rem] overflow-hidden bg-slate-900 relative">
+                            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Mobile Ad">
+                            <div class="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent"></div>
+                            <div class="absolute bottom-4 right-0 left-0 text-center">
+                                <div class="inline-block px-3 py-1 bg-white text-black text-xs font-bold rounded-full">خرید کنید</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Graphics -->
+                <div class="hidden lg:block absolute top-10 -right-10 glass p-4 rounded-2xl flex items-center gap-2 border border-purple-500/20">
+                    <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-purple-300"></i>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-slate-400">تولید شده با AI</p>
+                        <p class="text-sm font-semibold">کیفیت 4K</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By / Marquee -->
+    <section class="py-12 border-y border-white/5 bg-[#111827]/30">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-xs uppercase tracking-widest text-slate-500 mb-8">پشتیبانی شده توسط پیشرفته‌ترین ابزارهای هوش مصنوعی</p>
+            <div class="marquee-container">
+                <div class="marquee-track flex gap-16 items-center">
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="bot"></i> ChatGPT</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="aperture"></i> Midjourney</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="film"></i> Runway</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="zap"></i> Kling AI</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="play-circle"></i> Veo</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="palette"></i> Leonardo AI</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="mic"></i> ElevenLabs</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="user-check"></i> HeyGen</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="scissors"></i> CapCut</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="clapperboard"></i> Premiere</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="layers"></i> After Effects</span>
+                    
+                    <!-- Duplicate for infinite scroll -->
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="bot"></i> ChatGPT</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="aperture"></i> Midjourney</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="film"></i> Runway</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="zap"></i> Kling AI</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="play-circle"></i> Veo</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="palette"></i> Leonardo AI</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="mic"></i> ElevenLabs</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="user-check"></i> HeyGen</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="scissors"></i> CapCut</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="clapperboard"></i> Premiere</span>
+                    <span class="text-2xl font-bold text-slate-600 hover:text-purple-400 transition flex items-center gap-2"><i data-lucide="layers"></i> After Effects</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 fade-up">
+                <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">خدمات ما</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">راهکارهای پیشرفته ویدیو با AI</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">از ایده تا محصول نهایی، ما از پیشرفته‌ترین ابزارهای هوش مصنوعی برای ارائه محتوای تجاری بی‌نظیر استفاده می‌کنیم.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Service Cards -->
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="clapperboard" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">ویدیوهای تجاری AI</h3>
+                    <p class="text-slate-400">تبلیغات سینمایی با کیفیت تلویزیونی تولید شده با هوش مصنوعی، غیرقابل تشخیص از تولیدات پرهزینه سنتی.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="megaphone" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">تبلیغات شبکه‌های اجتماعی</h3>
+                    <p class="text-slate-400">تبلیغات خلاقانه برای فیسبوک، اینستاگرام و تیک‌تاک که برای به حداکثر رساندن بازگشت سرمایه طراحی شده‌اند.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="instagram" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">اینستاگرام ریلز</h3>
+                    <p class="text-slate-400">ریلزهای پرسرعت و ترند که توجه مخاطب را جلب کرده و هویت برند شما را در شبکه‌های اجتماعی تقویت می‌کنند.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="music-2" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">تبلیغات تیک‌تاک</h3>
+                    <p class="text-slate-400">محتوای تیک‌تاک آماده ویروسی شدن با استفاده از ترندهای بومی و خلاقیت هوش مصنوعی برای افزایش نرخ تبدیل.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="package" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">ویدیوهای محصول</h3>
+                    <p class="text-slate-400">نمایشگاهی خیره‌کننده از محصول با موشن گرافیک پویا، نورپردازی و جزئیات ارتقا یافته با هوش مصنوعی.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="building" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">ویدیوهای سازمانی</h3>
+                    <p class="text-slate-400">ویدیوهای حرفه‌ای B2B و ارتباطات داخلی با ارائه‌دهندگان هوش مصنوعی و تدوین بی‌نقص.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="mic" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">گوینده هوش مصنوعی</h3>
+                    <p class="text-slate-400">نریشن‌های فوق‌العاده واقع‌گرایانه با احساسات واقعی در بیش از ۵۰ زبان. غیرقابل تشخیص از انسان.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="user-cog" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">آواتارهای هوش مصنوعی</h3>
+                    <p class="text-slate-400">آواتارهای دیجیتال اختصاصی که نماینده برند شما هستند و می‌توانند هر متنی را به صورت پویا بیان کنند.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="wand-sparkles" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">موشن گرافیک</h3>
+                    <p class="text-slate-400">موشن گرافیک سه‌بعدی و تایپوگرافی جنبشی پیشرفته برای ارتقای روایت بصری شما.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="scissors" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">تدوین ویدیو</h3>
+                    <p class="text-slate-400">پست‌پروداکشن حرفه‌ای، گرید رنگی و ریتم‌بندی با دقت هوش مصنوعی و خلاقیت انسانی.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="compass" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">استراتژی محتوا</h3>
+                    <p class="text-slate-400">نقشه راه محتوایی مبتنی بر داده که برای تبدیل بینندگان به مشتریان وفادار طراحی شده است.</p>
+                </div>
+
+                <div class="gradient-border p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 group fade-up">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/20 flex items-center justify-center mb-6 group-hover:from-purple-500 group-hover:to-purple-700 transition">
+                        <i data-lucide="target" class="w-7 h-7 text-purple-300 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">کمپین‌های بازاریابی</h3>
+                    <p class="text-slate-400">کمپین‌های بازاریابی ویدیویی کامل که پیام شما را به مخاطب مناسب می‌رسانند.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-32 relative bg-[#111827]/30 border-y border-white/5">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple-900/10 rounded-full filter blur-[150px]"></div>
+        <div class="max-w-7xl mx-auto px-6 relative">
+            <div class="text-center mb-20 fade-up">
+                <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">چرا ما؟</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">ساخته شده برای برندهای مدرن</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">ما سرعت هوش مصنوعی را با هنر خلاقیت انسانی ترکیب می‌کنیم.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="rocket" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">تحویل سریع</h3>
+                    <p class="text-slate-400 text-sm">پیش‌نویس اولیه ویدیوهای خود را در کمتر از ۲۴ ساعت دریافت کنید.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="clock" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">تحویل ۲۴ ساعته</h3>
+                    <p class="text-slate-400 text-sm">سرعت پیشرو در صنعت بدون به خطر انداختن کیفیت.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="gem" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">کیفیت حرفه‌ای</h3>
+                    <p class="text-slate-400 text-sm">کیفیت سینمایی 4K که برند شما را ارتقا می‌بخشد.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="wallet" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">قیمت مقرون‌به‌صرفه</h3>
+                    <p class="text-slate-400 text-sm">محتوای حرفه‌ای با کسری از هزینه‌های سنتی.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="cpu" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">گردش کار مبتنی بر AI</h3>
+                    <p class="text-slate-400 text-sm">ادغام یکپارچه بهترین ابزارهای هوش مصنوعی موجود.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="infinity" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">خلاقیت نامحدود</h3>
+                    <p class="text-slate-400 text-sm">بدون محدودیت فیزیکی. اگر می‌توانید تصور کنید، ما می‌سازیم.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="headphones" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">پشتیبانی اختصاصی</h3>
+                    <p class="text-slate-400 text-sm">تیم شخصی شما که شبانه‌روزی برای پشتیبانی در دسترس است.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 fade-up text-center">
+                    <i data-lucide="shield-check" class="w-10 h-10 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">حقوق کامل مالکیت</h3>
+                    <p class="text-slate-400 text-sm">شما ۱۰۰٪ مالکیت تمام محتوا و دارایی‌های تولید شده را دارید.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 fade-up">
+                <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">روند کار</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">ویدیوی شما در ۷ گام ساده</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">یک خط ل carrots یکپارچه از ایده تا تحویل، بهینه شده برای سرعت و کیفیت.</p>
+            </div>
+
+            <div class="relative max-w-3xl mx-auto">
+                <!-- Vertical Line (Right side for RTL) -->
+                <div class="absolute right-8 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500 via-purple-500/50 to-transparent"></div>
+
+                <div class="relative flex items-center mb-12 fade-up">
+                    <div class="glass p-6 rounded-2xl flex-1 border border-white/5 ml-8 text-right">
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">گام ۱</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">ثبت پروژه</h3>
+                        <p class="text-slate-400">چشم‌انداز، جزئیات محصول و اهداف خود را از طریق فرم ثبت سفارش به اشتراک بگذارید.</p>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl glass border border-purple-500/30 flex items-center justify-center mr-[-4rem] z-10 glow-purple shrink-0">
+                        <i data-lucide="send" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center mb-12 fade-up">
+                    <div class="glass p-6 rounded-2xl flex-1 border border-white/5 ml-8 text-right">
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">گام ۲</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">نگارش سناریو با AI</h3>
+                        <p class="text-slate-400">هوش مصنوعی ما یک سناریوی جذاب و بهینه‌شده برای مخاطب هدف شما تولید می‌کند.</p>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl glass border border-purple-500/30 flex items-center justify-center mr-[-4rem] z-10 glow-purple shrink-0">
+                        <i data-lucide="file-text" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center mb-12 fade-up">
+                    <div class="glass p-6 rounded-2xl flex-1 border border-white/5 ml-8 text-right">
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">گام ۳</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">تولید تصاویر با AI</h3>
+                        <p class="text-slate-400">فریم‌های بصری خیره‌کننده و استوری‌بوردها با استفاده از Midjourney و Leonardo ایجاد می‌شوند.</p>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl glass border border-purple-500/30 flex items-center justify-center mr-[-4rem] z-10 glow-purple shrink-0">
+                        <i data-lucide="image" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center mb-12 fade-up">
+                    <div class="glass p-6 rounded-2xl flex-1 border border-white/5 ml-8 text-right">
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">گام ۴</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">تولید ویدیو با AI</h3>
+                        <p class="text-slate-400">Runway و Kling AI فریم‌ها را به ویدیوهای سینمایی و روان تبدیل می‌کنند.</p>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl glass border border-purple-500/30 flex items-center justify-center mr-[-4rem] z-10 glow-purple shrink-0">
+                        <i data-lucide="video" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center mb-12 fade-up">
+                    <div class="glass p-6 rounded-2xl flex-1 border border-white/5 ml-8 text-right">
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">گام ۵</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">گوینده‌گی</h3>
+                        <p class="text-slate-400">ElevenLabs نریشن‌های فوق‌العاده واقع‌گرایانه با احساسات کامل تولید می‌کند.</p>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl glass border border-purple-500/30 flex items-center justify-center mr-[-4rem] z-10 glow-purple shrink-0">
+                        <i data-lucide="mic" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center mb-12 fade-up">
+                    <div class="glass p-6 rounded-2xl flex-1 border border-white/5 ml-8 text-right">
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">گام ۶</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">تدوین حرفه‌ای</h3>
+                        <p class="text-slate-400">کارشناسان انسانی ما ویدیو را با موشن گرافیک و طراحی صدا اصلاح می‌کنند.</p>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl glass border border-purple-500/30 flex items-center justify-center mr-[-4rem] z-10 glow-purple shrink-0">
+                        <i data-lucide="clapperboard" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center fade-up">
+                    <div class="glass p-6 rounded-2xl flex-1 border border-white/5 ml-8 text-right">
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">گام ۷</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">تحویل</h3>
+                        <p class="text-slate-400">ویدیوی نهایی 4K تجاری خود را که آماده انتشار در تمام پلتفرم‌هاست دریافت کنید.</p>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl glass border border-purple-500/30 flex items-center justify-center mr-[-4rem] z-10 glow-purple shrink-0">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section id="portfolio" class="py-32 relative bg-[#111827]/30 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 fade-up">
+                <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">نمونه کارها</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">آثار اخیر هوش مصنوعی ما</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">طیف وسیعی از صنایعی که با ویدیوی هوش مصنوعی متحول کرده‌ایم را کاوش کنید.</p>
+            </div>
+
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden fade-up border border-white/5 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1560518883-ce09059dffa1?q=80&w=600&auto=format&fit=crop" class="w-full object-cover transition duration-500 group-hover:scale-110" alt="املاک">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/90 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
+                        <div class="text-right">
+                            <span class="text-xs text-purple-300 font-bold uppercase tracking-widest">املاک</span>
+                            <h3 class="text-2xl font-bold">تور مجازی ملک لوکس</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden fade-up border border-white/5 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=600&auto=format&fit=crop" class="w-full object-cover transition duration-500 group-hover:scale-110" alt="پزشکی">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/90 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
+                        <div class="text-right">
+                            <span class="text-xs text-purple-300 font-bold uppercase tracking-widest">پزشکی</span>
+                            <h3 class="text-2xl font-bold">نوآوری در سلامت</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden fade-up border border-white/5 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad99c4?q=80&w=600&auto=format&fit=crop" class="w-full object-cover transition duration-500 group-hover:scale-110" alt="رستوران">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/90 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
+                        <div class="text-right">
+                            <span class="text-xs text-purple-300 font-bold uppercase tracking-widest">رستوران</span>
+                            <h3 class="text-2xl font-bold">تجربه آشپزی</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden fade-up border border-white/5 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=600&auto=format&fit=crop" class="w-full object-cover transition duration-500 group-hover:scale-110" alt="مد و فشن">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/90 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
+                        <div class="text-right">
+                            <span class="text-xs text-purple-300 font-bold uppercase tracking-widest">مد و فشن</span>
+                            <h3 class="text-2xl font-bold">کالکشن تابستانه</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden fade-up border border-white/5 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636460b7eb1?q=80&w=600&auto=format&fit=crop" class="w-full object-cover transition duration-500 group-hover:scale-110" alt="فناوری">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/90 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
+                        <div class="text-right">
+                            <span class="text-xs text-purple-300 font-bold uppercase tracking-widest">فناوری</span>
+                            <h3 class="text-2xl font-bold">تبلیغ دستگاه‌های هوشمند</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden fade-up border border-white/5 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=600&auto=format&fit=crop" class="w-full object-cover transition duration-500 group-hover:scale-110" alt="تجارت الکترونیک">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/90 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
+                        <div class="text-right">
+                            <span class="text-xs text-purple-300 font-bold uppercase tracking-widest">تجارت الکترونیک</span>
+                            <h3 class="text-2xl font-bold">پروموشن فروش ویژه</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden fade-up border border-white/5 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=600&auto=format&fit=crop" class="w-full object-cover transition duration-500 group-hover:scale-110" alt="زیبایی">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/90 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
+                        <div class="text-right">
+                            <span class="text-xs text-purple-300 font-bold uppercase tracking-widest">زیبایی</span>
+                            <h3 class="text-2xl font-bold">رونمایی محصولات آرایشی</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-32 relative">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[500px] bg-purple-900/10 rounded-full filter blur-[150px]"></div>
+        <div class="max-w-7xl mx-auto px-6 relative">
+            <div class="text-center mb-20 fade-up">
+                <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">قیمت‌گذاری</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">پلن‌های ساده و شفاف</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">بسته‌ای را انتخاب کنید که با نیازهای ویدیویی برند شما مقیاس‌پذیر باشد.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div class="glass p-10 rounded-[2rem] border border-white/5 fade-up hover:-translate-y-2 transition duration-300">
+                    <h3 class="text-2xl font-bold mb-2">استارتر</h3>
+                    <p class="text-slate-400 mb-8">برای کسب‌وکارهای کوچک و آزمایش ویدیو AI.</p>
+                    <div class="mb-8">
+                        <span class="text-5xl font-bold">$499</span>
+                        <span class="text-slate-400">/ماه</span>
+                    </div>
+                    <ul class="space-y-4 mb-8 text-slate-300">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> ۲ ویدیو AI در ماه</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> مدت زمان تا ۳۰ ثانیه</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> گوینده AI</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> موشن گرافیک پایه</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> کیفیت 1080p</li>
+                    </ul>
+                    <a href="#contact" class="block text-center w-full py-4 rounded-xl glass hover:bg-white/10 transition font-semibold">شروع کنید</a>
+                </div>
+
+                <div class="relative p-[2px] rounded-[2rem] bg-gradient-to-b from-purple-500 to-purple-900 fade-up glow-purple">
+                    <div class="bg-[#0F172A] p-10 rounded-[1.9rem] h-full flex flex-col">
+                        <span class="absolute top-0 left-10 -mt-3 px-4 py-1 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] rounded-full text-xs font-bold uppercase tracking-widest">محبوب‌ترین</span>
+                        <h3 class="text-2xl font-bold mb-2 text-purple-300">حرفه‌ای</h3>
+                        <p class="text-slate-400 mb-8">برای برندهای رو به رشد که نیاز به محتوای مداوم دارند.</p>
+                        <div class="mb-8">
+                            <span class="text-5xl font-bold">$1,499</span>
+                            <span class="text-slate-400">/ماه</span>
+                        </div>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> ۶ ویدیو AI در ماه</li>
+                            <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> مدت زمان تا ۶۰ ثانیه</li>
+                            <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> آواتارهای اختصاصی AI</li>
+                            <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> موشن گرافیک پیشرفته</li>
+                            <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> کیفیت 4K</li>
+                            <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> پشتیبانی اولویت‌دار</li>
+                        </ul>
+                        <a href="#contact" class="btn-primary block text-center w-full py-4 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#A855F7] font-semibold">شروع پروژه شما</a>
+                    </div>
+                </div>
+
+                <div class="glass p-10 rounded-[2rem] border border-white/5 fade-up hover:-translate-y-2 transition duration-300">
+                    <h3 class="text-2xl font-bold mb-2">سازمانی</h3>
+                    <p class="text-slate-400 mb-8">مقیاس نامحدود برای آژانس‌ها و تیم‌های بزرگ.</p>
+                    <div class="mb-8">
+                        <span class="text-5xl font-bold">سفارشی</span>
+                    </div>
+                    <ul class="space-y-4 mb-8 text-slate-300">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> ویدیوهای نامحدود AI</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> مدت زمان نامحدود</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> آموزش مدل اختصاصی AI</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> استراتژی کامل کمپین</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-purple-400"></i> مدیر حساب اختصاصی</li>
+                    </ul>
+                    <a href="#contact" class="block text-center w-full py-4 rounded-xl glass hover:bg-white/10 transition font-semibold">تماس با فروش</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-32 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 fade-up">
+                <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">نظرات مشتریان</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">محبوب نوآوران</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">ببینید مشتریان ما در مورد کار با استودیو حرکت هوش مصنوعی چه می‌گویند.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass p-8 rounded-3xl border border-white/5 fade-up flex flex-col">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                    </div>
+                    <p class="text-slate-300 text-lg mb-6 flex-1">"ما کل تیم تولید ویدیوی سنتی خود را با استودیو حرکت هوش مصنوعی جایگزین کردیم. کیفیت غیرقابل باور است و تبلیغات را در ۲۴ ساعت به جای ۳ هفته دریافت می‌کنیم."</p>
+                    <div class="flex items-center gap-4 flex-row-reverse justify-end text-right">
+                        <img src="https://i.pravatar.cc/100?img=12" class="w-12 h-12 rounded-full border-2 border-purple-500/50" alt="کاربر">
+                        <div>
+                            <p class="font-bold">سارا ک.</p>
+                            <p class="text-sm text-slate-400">مدیر بازاریابی، TechFlow</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border border-white/5 fade-up flex flex-col">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                    </div>
+                    <p class="text-slate-300 text-lg mb-6 flex-1">"آواتارهای هوش مصنوعی شگفت‌انگیز هستند. مشتریان ما تفاوت را متوجه نمی‌شوند. نرخ تعامل ما در تیک‌تاک از زمان تغییر به این سیستم ۴۰۰٪ افزایش یافته است."</p>
+                    <div class="flex items-center gap-4 flex-row-reverse justify-end text-right">
+                        <img src="https://i.pravatar.cc/100?img=5" class="w-12 h-12 rounded-full border-2 border-purple-500/50" alt="کاربر">
+                        <div>
+                            <p class="font-bold">مرتضی ر.</p>
+                            <p class="text-sm text-slate-400">بنیان‌گذار، EcomScale</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border border-white/5 fade-up flex flex-col">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-current"></i>
+                    </div>
+                    <p class="text-slate-300 text-lg mb-6 flex-1">"یک توسعه واقعی برای آژانس خلاق ما. آن‌ها سرریز کارها را به راحتی مدیریت می‌کنند و قیمت‌گذاری برای سطح کیفیت سینمایی که دریافت می‌کنیم بی‌رقیب است."</p>
+                    <div class="flex items-center gap-4 flex-row-reverse justify-end text-right">
+                        <img src="https://i.pravatar.cc/100?img=33" class="w-12 h-12 rounded-full border-2 border-purple-500/50" alt="کاربر">
+                        <div>
+                            <p class="font-bold">الناز م.</p>
+                            <p class="text-sm text-slate-400">مدیر، CreativeHub</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-32 relative bg-[#111827]/30 border-y border-white/5">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-20 fade-up">
+                <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">سوالات متداول</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">پرسش‌های پرتکرار</h2>
+                <p class="text-slate-400 text-lg">هر آنچه باید در مورد روند ویدیوی هوش مصنوعی ما بدانید.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="glass rounded-2xl border border-white/5 overflow-hidden fade-up">
+                    <button class="faq-btn w-full text-right p-6 flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="text-lg font-semibold">چگونه می‌توانید ویدیوها را در ۲۴ ساعت تحویل دهید؟</span>
+                        <i data-lucide="plus" class="w-5 h-5 text-purple-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-6 pb-6 text-slate-400">گردش کار ما به طور کامل توسط مدل‌های پیشرفته هوش مصنوعی مانند Runway، Kling و ElevenLabs پشتیبانی می‌شود. با حذف خدمه دوربین، مکان‌یابی و گلوگاه‌های سنتی پساتولید، می‌توانیم محتوای ویدیویی با کیفیت بالا را در کسری از زمان تولید، مونتاژ و اصلاح کنیم.</p>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl border border-white/5 overflow-hidden fade-up">
+                    <button class="faq-btn w-full text-right p-6 flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="text-lg font-semibold">آیا مالکیت ویدیوهای تولید شده متعلق به من است؟</span>
+                        <i data-lucide="plus" class="w-5 h-5 text-purple-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-6 pb-6 text-slate-400">قطعا. شما ۱۰۰٪ حقوق تجاری تمام ویدیوها، آواتارها و دارایی‌های تولید شده تحت پلن اشتراک خود را حفظ می‌کنید. شما آزاد هستید که از آن‌ها در تمام پلتفرم‌های دیجیتال و تلویزیونی در سراسر جهان استفاده کنید.</p>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl border border-white/5 overflow-hidden fade-up">
+                    <button class="faq-btn w-full text-right p-6 flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="text-lg font-semibold">آیا می‌توانید ویدیوها را به زبان‌های مختلف تولید کنید؟</span>
+                        <i data-lucide="plus" class="w-5 h-5 text-purple-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-6 pb-6 text-slate-400">بله، ما از بیش از ۵۰ زبان به طور بومی پشتیبانی می‌کنیم. فناوری کلون صدای هوش مصنوعی ما می‌تواند نریشن‌های اصیل و احساسی به هر زبانی تولید کند و به شما امکان می‌دهد کمپین‌های بازاریابی خود را در سطح جهانی مقیاس کنید.</p>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl border border-white/5 overflow-hidden fade-up">
+                    <button class="faq-btn w-full text-right p-6 flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="text-lg font-semibold">چه تفاوتی با آژانس‌های سنتی دارید؟</span>
+                        <i data-lucide="plus" class="w-5 h-5 text-purple-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-6 pb-6 text-slate-400">آژانس‌های سنتی به بودجه‌های کلان، خدمه و هفته‌ها برنامه‌ریزی نیاز دارند. ما از هوش مصنوعی برای حذف این هزینه‌ها و در عین حال دستیابی به کیفیت سینمایی قابل مقایسه یا برتر استفاده می‌کنیم. ما این پس‌اندازها را مستقیماً به شما منتقل می‌کنیم و راه‌حلی سریع‌تر، مقیاس‌پذیرتر و بی‌نهایت خلاقانه‌تر ارائه می‌دهیم.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-32 relative">
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-700/10 rounded-full filter blur-[120px]"></div>
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-up">
+                    <span class="text-purple-400 text-sm font-semibold uppercase tracking-widest">تماس با ما</span>
+                    <h2 class="text-4xl md:text-6xl font-bold mt-4 mb-6 tracking-tight">پروژه هوش مصنوعی <br> خود را امروز شروع کنید</h2>
+                    <p class="text-slate-400 text-lg mb-8">فرم را پر کنید و تیم ما در کمتر از ۱۲ ساعت برای بحث در مورد نیازهای ویدیوی تجاری شما با شما تماس خواهد گرفت.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 flex-row-reverse justify-end text-right">
+                            <div class="w-12 h-12 rounded-2xl glass flex items-center justify-center">
+                                <i data-lucide="mail" class="w-5 h-5 text-purple-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-400">ایمیل ما</p>
+                                <p class="font-semibold" dir="ltr">hello@aimotionstudio.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 flex-row-reverse justify-end text-right">
+                            <div class="w-12 h-12 rounded-2xl glass flex items-center justify-center">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-purple-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-400">موقعیت ما</p>
+                                <p class="font-semibold">تهران، ایران (خدمات远程 در سراسر جهان)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gradient-border p-8 md:p-10 rounded-[2rem] fade-up">
+                    <form class="space-y-5">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-2">نام و نام خانوادگی</label>
+                            <input type="text" placeholder="نام شما" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition text-right">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-slate-400 mb-2">ایمیل</label>
+                                <input type="email" placeholder="email@company.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition text-right" dir="ltr">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-slate-400 mb-2">شماره تماس</label>
+                                <input type="tel" placeholder="+98 912 345 6789" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition text-right" dir="ltr">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-slate-400 mb-2">نوع کسب و کار</label>
+                                <select class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition text-slate-400">
+                                    <option>استارتاپ</option>
+                                    <option>تجارت الکترونیک</option>
+                                    <option>آژانس</option>
+                                    <option>شرکت بزرگ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-slate-400 mb-2">بودجه</label>
+                                <select class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition text-slate-400">
+                                    <option>۵۰۰ تا ۱,۰۰۰ دلار</option>
+                                    <option>۱,۰۰۰ تا ۵,۰۰۰ دلار</option>
+                                    <option>بالای ۵,۰۰۰ دلار</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-2">تاریخ تحویل مورد نظر</label>
+                            <input type="date" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition text-slate-400">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-2">توضیحات پروژه</label>
+                            <textarea rows="4" placeholder="ایده ویدیوی خود را برای ما شرح دهید..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition resize-none text-right"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full py-4 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] rounded-xl font-semibold text-lg flex items-center justify-center gap-2 glow-purple">
+                            شروع پروژه <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-20 pb-10 border-t border-white/5 bg-[#0F172A]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-12">
+                <div class="col-span-2">
+                    <a href="#" class="flex items-center gap-2 text-xl font-bold tracking-tight mb-4">
+                        <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7C3AED] to-[#A855F7] flex items-center justify-center">
+                            <i data-lucide="play-circle" class="w-5 h-5 text-white"></i>
+                        </span>
+                        استودیو حرکت هوش مصنوعی
+                    </a>
+                    <p class="text-slate-400 max-w-sm">تبدیل ایده‌ها به ویدیوهای تجاری سینمایی با هوش مصنوعی. آینده تبلیغات اینجاست.</p>
+                    <div class="flex gap-4 mt-6">
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-purple-500/20 transition"><i data-lucide="twitter" class="w-4 h-4 text-slate-300"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-purple-500/20 transition"><i data-lucide="linkedin" class="w-4 h-4 text-slate-300"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-purple-500/20 transition"><i data-lucide="instagram" class="w-4 h-4 text-slate-300"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-purple-500/20 transition"><i data-lucide="youtube" class="w-4 h-4 text-slate-300"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">شرکت</h4>
+                    <ul class="space-y-3 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">درباره ما</a></li>
+                        <li><a href="#" class="hover:text-white transition">فرصت‌های شغلی</a></li>
+                        <li><a href="#" class="hover:text-white transition">وبلاگ</a></li>
+                        <li><a href="#" class="hover:text-white transition">تماس با ما</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">خدمات</h4>
+                    <ul class="space-y-3 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">ویدیوهای AI</a></li>
+                        <li><a href="#" class="hover:text-white transition">تبلیغات شبکه‌های اجتماعی</a></li>
+                        <li><a href="#" class="hover:text-white transition">آواتارهای AI</a></li>
+                        <li><a href="#" class="hover:text-white transition">موشن گرافیک</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">نمونه کارها</h4>
+                    <ul class="space-y-3 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">تبلیغات تجاری</a></li>
+                        <li><a href="#" class="hover:text-white transition">معرفی محصول</a></li>
+                        <li><a href="#" class="hover:text-white transition">مد و فشن</a></li>
+                        <li><a href="#" class="hover:text-white transition">املاک</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">قوانین</h4>
+                    <ul class="space-y-3 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">سیاست حفظ حریم خصوصی</a></li>
+                        <li><a href="#" class="hover:text-white transition">شرایط استفاده از خدمات</a></li>
+                        <li><a href="#" class="hover:text-white transition">سیاست کوکی‌ها</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm">
+                <p>© ۲۰۲۳ استودیو حرکت هوش مصنوعی. تمامی حقوق محفوظ است.</p>
+                <p>طراحی شده برای آینده.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 300, fill: "forwards" });
+        });
+
+        document.querySelectorAll('a, button, input, textarea, select, label').forEach(el => {
+            el.addEventListener('mouseover', () => cursorOutline.classList.add('hovered'));
+            el.addEventListener('mouseout', () => cursorOutline.classList.remove('hovered'));
+        });
+
+        // Fade Up Animation Observer
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => {
+            fadeObserver.observe(el);
+        });
+
+        // Accordion Logic
+        document.querySelectorAll('.faq-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                const icon = btn.querySelector('i');
+                
+                if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                    content.style.maxHeight = '0px';
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = '0px');
+                    document.querySelectorAll('.faq-btn i').forEach(i => i.style.transform = 'rotate(0deg)');
+                    
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(45deg)';
+                }
+            });
+        });
+
+        // Parallax effect on hero mockup
+        const heroMockup = document.querySelector('.mockup-laptop');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * -1; // Inverse for RTL
+            const y = e.clientY / window.innerHeight - 0.5;
+            
+            if(heroMockup && window.innerWidth > 768) {
+                heroMockup.style.transform = `perspective(1000px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`;
+            }
+        });
+
+        // ==========================================
+        // THREE.JS 3D HERO ANIMATION
+        // ==========================================
+        let scene, camera, renderer, particles, geometry, material, mouseX = 0, mouseY = 0;
+        let torus, torus2;
+        const hero3dContainer = document.getElementById('hero-3d-bg');
+
+        function initThree() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            hero3dContainer.appendChild(renderer.domElement);
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0x7C3AED, 0.5);
+            scene.add(ambientLight);
+
+            const pointLight1 = new THREE.PointLight(0x7C3AED, 1.5);
+            pointLight1.position.set(0, 2, 3);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0xC084FC, 1.5);
+            pointLight2.position.set(2, -2, 1);
+            scene.add(pointLight2);
+
+            // Create 3D Objects (Wireframe Torus Knots)
+            const geo1 = new THREE.TorusKnotGeometry(1.5, 0.4, 100, 16);
+            const mat1 = new THREE.MeshStandardMaterial({
+                color: 0x7C3AED,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.6,
+                emissive: 0x7C3AED,
+                emissiveIntensity: 0.3
+            });
+            torus = new THREE.Mesh(geo1, mat1);
+            scene.add(torus);
+
+            const geo2 = new THREE.IcosahedronGeometry(0.8, 0);
+            const mat2 = new THREE.MeshStandardMaterial({
+                color: 0xC084FC,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.8,
+                emissive: 0xC084FC,
+                emissiveIntensity: 0.5
+            });
+            torus2 = new THREE.Mesh(geo2, mat2);
+            torus2.position.set(2, 1, -1);
+            scene.add(torus2);
+
+            // Create Particles
+            const particleCount = 800;
+            geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for(let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 25;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            // Create a circular texture for particles
+            const canvas = document.createElement('canvas');
+            canvas.width = 16;
+            canvas.height = 16;
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+            gradient.addColorStop(0, 'rgba(255,255,255,1)');
+            gradient.addColorStop(0.5, 'rgba(168,85,247,0.8)');
+            gradient.addColorStop(1, 'rgba(124,58,237,0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 16, 16);
+            const texture = new THREE.CanvasTexture(canvas);
+
+            material = new THREE.PointsMaterial({
+                size: 0.08,
+                map: texture,
+                transparent: true,
+                alphaTest: 0.01,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Event Listeners
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+
+            // Rotate objects
+            if(torus) {
+                torus.rotation.x += 0.002;
+                torus.rotation.y += 0.003;
+            }
+            if(torus2) {
+                torus2.rotation.x -= 0.004;
+                torus2.rotation.y -= 0.002;
+            }
+            if(particles) {
+                particles.rotation.y += 0.0005;
+            }
+
+            // Camera subtle movement based on mouse
+            camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.03;
+            camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize 3D Scene
+        initThree();
+        animateThree();
+
+    </script>
+</body>
+</html>
