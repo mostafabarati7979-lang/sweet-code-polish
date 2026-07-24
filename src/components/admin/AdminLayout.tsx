@@ -1,15 +1,18 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, ShoppingCart, Users, Sparkles, Receipt, CreditCard,
   Bell, BarChart3, PieChart, Repeat2, Search,
-  Globe, Moon, ChevronsLeft, ChevronsRight, Menu,
+  Globe, Moon, ChevronsLeft, ChevronsRight, Menu, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; fa: string; en: string };
 type NavGroup = { fa: string; en: string; items: NavItem[] };
@@ -73,6 +76,30 @@ export function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isRTL = lang === "fa";
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [initials, setInitials] = useState<string>("AM");
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const email = data.user?.email ?? "";
+      setUserEmail(email);
+      const meta = (data.user?.user_metadata ?? {}) as { full_name?: string };
+      const src = meta.full_name || email;
+      const parts = src.trim().split(/[\s@._-]+/).filter(Boolean);
+      const ini = (parts[0]?.[0] ?? "A") + (parts[1]?.[0] ?? parts[0]?.[1] ?? "M");
+      setInitials(ini.toUpperCase().slice(0, 2));
+    });
+  }, []);
+
+  const handleSignOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    toast.success(isRTL ? "خروج موفق" : "Signed out");
+    navigate({ to: "/login", replace: true });
+  };
 
   return (
     <div className="admin-theme dark min-h-screen" dir={isRTL ? "rtl" : "ltr"}>
@@ -212,13 +239,22 @@ export function AdminLayout() {
                 </Button>
                 <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 py-1 pe-3 ps-1">
                   <Avatar className="h-8 w-8 ring-2 ring-[#7C3AED]/40">
-                    <AvatarFallback className="gradient-primary text-xs font-bold text-white">AM</AvatarFallback>
+                    <AvatarFallback className="gradient-primary text-xs font-bold text-white">{initials}</AvatarFallback>
                   </Avatar>
                   <div className="hidden text-xs leading-tight sm:block">
-                    <div className="font-semibold text-foreground">{isRTL ? "علی مدیر" : "Ali Admin"}</div>
-                    <div className="text-muted-foreground">Super Admin</div>
+                    <div className="font-semibold text-foreground">{userEmail || (isRTL ? "کاربر" : "User")}</div>
+                    <div className="text-muted-foreground">{isRTL ? "مدیر" : "Admin"}</div>
                   </div>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleSignOut}
+                  title={isRTL ? "خروج" : "Sign out"}
+                  className="rounded-full border border-white/10 bg-white/5 hover:bg-red-500/20"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </header>
