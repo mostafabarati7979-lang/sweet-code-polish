@@ -2,7 +2,7 @@ import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-route
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, ShoppingCart, Users, Sparkles, Receipt, CreditCard,
-  Bell, BarChart3, PieChart, Repeat2, Search,
+  Bell, BarChart3, PieChart, Repeat2, Search, ShieldCheck,
   Globe, Moon, ChevronsLeft, ChevronsRight, Menu, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,12 @@ const NAV: NavGroup[] = [
       { to: "/admin/invoices", icon: Receipt, fa: "فاکتورها", en: "Invoices" },
       { to: "/admin/payments", icon: CreditCard, fa: "پرداخت‌ها", en: "Payments" },
       { to: "/admin/subscriptions", icon: Repeat2, fa: "اشتراک‌ها", en: "Subscriptions" },
+    ],
+  },
+  {
+    fa: "سیستم", en: "System",
+    items: [
+      { to: "/admin/users", icon: ShieldCheck, fa: "کاربران و نقش‌ها", en: "Users & Roles" },
     ],
   },
 ];
